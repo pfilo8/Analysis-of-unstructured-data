@@ -5,7 +5,7 @@ import tweepy
 
 class HashtagTweetsDownloader:
 
-    MAX_COUNT = 10000
+    MAX_COUNT = 1000
 
     def __init__(self, api):
         self.api = api
@@ -27,9 +27,10 @@ class HashtagTweetsDownloader:
             writer.writerows(out_tweets)
 
     def download_all_tweets(self, path_destination, **kwargs):
-        for tweet in tweepy.Cursor(self.api.search, tweet_mode='extended', **kwargs).items(self.MAX_COUNT):
-            try:
+        try:
+            for tweet in tweepy.Cursor(self.api.search, tweet_mode='extended', **kwargs).items(self.MAX_COUNT):
                 self.all_tweets.append(tweet)
-            except:
-                break
-        self._save_tweets(path_destination)
+        except Exception as e:
+            pass
+        finally:
+            self._save_tweets(path_destination)
